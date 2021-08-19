@@ -8,7 +8,7 @@ import { Index as FlexSearchIndex  } from 'flexsearch'
 import FlexSearch from 'flexsearch'
 
 import { prettyKind as helperPrettyKind } from '@kubevious/helpers/dist/docs';
-import { SearchQuery, AlertsPayload, CriteriaMarkers, CriteriaAnnotations, CriteriaKinds, CriteriaLabels } from '../types';
+import { SearchQuery, SearchResult, AlertsPayload, CriteriaMarkers, CriteriaAnnotations, CriteriaKinds, CriteriaLabels } from '../types/search';
 import { RegistryBundleState } from '@kubevious/helpers/dist/registry-bundle-state';
 import { RegistryBundleNode } from '@kubevious/helpers/dist/registry-bundle-node';
 import { AlertCounter } from '@kubevious/helpers/dist/snapshot/types';
@@ -133,13 +133,13 @@ export class SearchEngine
         });
     }
 
-    search(query: SearchQuery)
+    search(query: SearchQuery) : SearchResult
     {
         const search = new SearchResults(this._rawItems);
 
-        if (_.isNotNullOrUndefined(query.kinds))
+        if (_.isNotNullOrUndefined(query.kind))
         {
-            this._filterByKind(query.kinds!, search);
+            this._filterByKind(query.kind!, search);
         }
 
         if (_.isNotNullOrUndefined(query.labels))
@@ -174,6 +174,7 @@ export class SearchEngine
         if (!search.wasFiltered) {
             return {
                 totalCount: 0,
+                wasFiltered: false,
                 results: []
             }
         }
@@ -185,7 +186,7 @@ export class SearchEngine
         // }
 
         const resultsArray = search.results;
-        let response = {
+        let response : SearchResult = {
             totalCount: resultsArray.length,
             results: _.take(resultsArray, 200).map((el) => ({ dn: el.dn })),
             wasFiltered: true

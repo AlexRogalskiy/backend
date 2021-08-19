@@ -1,11 +1,20 @@
 export interface SearchQuery {
     criteria?: string
-    kinds?: CriteriaKinds
+    kind?: CriteriaKinds
     errors?: AlertsPayload
     warnings?: AlertsPayload
     markers?: CriteriaMarkers
     labels?: CriteriaLabels
     annotations?: CriteriaAnnotations
+}
+
+export interface SearchKeyAutocompletion {
+    criteria?: string
+}
+
+export interface SearchValueAutocompletion {
+    key: string
+    criteria?: string
 }
 
 export interface AlertsPayload {
@@ -29,4 +38,14 @@ export type CriteriaAnnotations = {
 
 export type CriteriaKinds = {
     [kind:string]: boolean
+}
+
+export interface SearchResultItem {
+    dn: string
+}
+
+export interface SearchResult {
+    results: SearchResultItem[],
+    totalCount: number,
+    wasFiltered: boolean
 }
