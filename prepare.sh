@@ -6,6 +6,6 @@ cd $MY_DIR
 rm -rf node_modules/
 rm -rf dist/
 
-npm install
-
 ${MY_DIR}/update-dependencies.sh
+
+yarn

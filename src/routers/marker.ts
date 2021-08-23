@@ -11,7 +11,7 @@ export default function (router: Router, context: Context) {
 
     // List Makers
     router.get('/markers/', function (req, res) {
-        var result = context.markerCache.queryMarkerList();
+        let result = context.markerCache.queryMarkerList();
         result = result.map(x => ({
             name: x.name,
             shape: x.shape,
@@ -21,14 +21,17 @@ export default function (router: Router, context: Context) {
     })
 
     // Get Marker
-    router.get('/marker/:name', function (req, res) {
-        var result = context.markerCache.queryMarker(req.params.name);
+    router.get<{}, {}, MarkerQuery>('/marker', function (req, res) {
+        let result = context.markerCache.queryMarker(req.query.marker);
         return result;
     })
+    .querySchema(Joi.object({
+        marker: Joi.string().required(),
+    }))
 
     // Create Marker
     router.post('/marker/:name', function (req, res) {
-        var newMarker : any;
+        let newMarker : any;
         return context.markerAccessor
             .createMarker(req.body, { name: req.params.name })
             .then(result => {
@@ -81,14 +84,25 @@ export default function (router: Router, context: Context) {
 
     // List Marker Statuses
     router.get('/markers-statuses', function (req, res) {
-        var result = context.markerCache.getMarkersStatuses()
+        let result = context.markerCache.getMarkersStatuses()
         return result;
     })
     
     // Get Marker Result
     router.get('/marker-result/:name', function (req, res) {
-        var result = context.markerCache.getMarkerResult(req.params.name)
+        let result = context.markerCache.getMarkerResult(req.params.name)
         return result;
     })
 
+}
+
+interface MarkerQuery
+{
+    marker: string
+}
+
+
+interface RuleQuery
+{
+    rule: string
 }

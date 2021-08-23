@@ -27,7 +27,7 @@ steps:
     image: 'kubevious/node-builder:14'
     working_directory: ${{main_clone}}
     commands:
-      - npm ci
+      - yarn install --frozen-lockfile
     
   compile:
     title: Compile
